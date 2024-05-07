@@ -1,33 +1,36 @@
 #!/usr/bin/env bash
-# This script manages manage_my_process
+# This script is displaying "Holberton School" 10 times
 
-PIDFILE=/var/run/my_process.pid
+if [ "$#" -ne 1 ]
+then
+    echo "Usage: manage_my_process {start|stop|restart}"
+    exit $?
+fi
 
-start() {
+if [ "$1" != "start" ] && [ "$1" != "stop" ] && [ "$1" != "restart" ]
+then
+    echo "Usage: manage_my_process {start|stop|restart}"
+    exit $?
+fi
+
+if [ "$1" == "start" ]
+then
     ./manage_my_process &
-    echo "$!" > "$PIDFILE"
-}
+    echo "$!" > /var/run/my_process.pid
+    echo "manage_my_process started"
 
-stop() {
-    sudo kill -15 "$(cat "$PIDFILE")" && rm -f "$PIDFILE"
-}
+elif [ "$1" == "stop" ]
+then
+    kill "$(cat /var/run/my_process.pid)"
+    rm /var/run/my_process.pid
+    echo "manage_my_process stopped"
 
-case "$1" in 
-    start)
-       start
-       echo "manage_my_process started"
-       ;;
-    stop)
-       stop
-       echo "manage_my_process stopped"
-       ;;
-    restart)
-       stop
-       start
-       echo "manage_my_process restarted"
-       ;;
-    *)
-       echo "Usage: manage_my_process {start|stop|restart}"
-esac
+elif [ "$1" == "restart" ]
+then
+    kill "$(cat /var/run/my_process.pid)"
+    rm /var/run/my_process.pid
+    ./manage_my_process &
+    echo "$!" > /var/run/my_process.pid
+    echo "manage_my_process restarted"
 
-exit 0
+fi
