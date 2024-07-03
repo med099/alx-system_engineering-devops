@@ -4,5 +4,7 @@
 sudo apt-get update
 sudo apt-get install -y nginx
 sudo ufw allow 80
-sudo echo  "Hello World!" > /var/www/html/index.html
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+echo  "Hello World!" > /var/www/html/index.html
 sudo service nginx start
